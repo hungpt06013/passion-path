@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Đăng ký tài khoản</title>
+
+  <!-- Phông chữ (tuỳ chọn) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #f7faff;
+      --card: #ffffff;
+      --primary: #007bff;
+      --primary-strong: #0056b3;
+      --success: #28a745;
+      --danger: #dc3545;
+      --muted: #6c757d;
+      --shadow: 0 6px 18px rgba(20,20,40,0.06);
+      --radius: 12px;
+      --gap: 14px;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,body{
+      height: 100%;
+      margin: 0;
+      background: linear-gradient(180deg, #f7faff 0%, #eef6ff 100%);
+      color: #222;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    .page-wrapper{
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 26px;
+      border: 1px solid rgba(10,20,40,0.03);
+    }
+
+    h1 {
+      margin: 0 0 10px 0;
+      font-size: 20px;
+      font-weight: 600;
+      color: #0f1724;
+    }
+
+    p.lead {
+      margin: 0 0 20px 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    form {
+      display: grid;
+      gap: var(--gap);
+    }
+
+    .form-group {
+      display: grid;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 13px;
+      color: #121212;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(10,20,40,0.08);
+      font-size: 14px;
+      background: #fff;
+      transition: box-shadow .15s, border-color .15s;
+    }
+
+    input:focus {
+      outline: none;
+      box-shadow: 0 6px 18px rgba(0,123,255,0.08);
+      border-color: var(--primary);
+    }
+
+    .small-note {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .error-message {
+      font-size: 13px;
+      color: var(--danger);
+      margin-top: 4px;
+    }
+
+    .success-message {
+      font-size: 13px;
+      color: var(--success);
+      margin-top: 4px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    button[type="submit"] {
+      flex: 1;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    button[type="submit"]:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .secondary {
+      background: transparent;
+      border: 1px solid rgba(10,20,40,0.06);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #222;
+      cursor: pointer;
+    }
+
+    .field-inline {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .password-toggle {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .form-footer {
+      display: flex;
+      justify-content: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    a.link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    @media (max-width: 520px){
+      .card { padding: 18px; border-radius: 10px; }
+      .page-wrapper { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <section class="card" aria-labelledby="registration-heading">
+      <header>
+        <h1 id="registration-heading">Đăng ký tài khoản</h1>
+        <p class="lead">Tạo tài khoản để bắt đầu lộ trình học tập AI. Vui lòng điền đầy đủ thông tin.</p>
+      </header>
+
+      <!-- novalidate để toàn quyền kiểm soát validation JS -->
+      <form id="registrationForm" novalidate>
+        <!-- Họ và tên -->
+        <div class="form-group">
+          <label for="fullNameInput">Họ và tên</label>
+          <input id="fullNameInput" name="fullName" type="text" autocomplete="name" inputmode="text" placeholder="Nguyễn Văn A" aria-describedby="fullNameHelp" required>
+          <div id="fullNameError" class="error-message" role="alert" aria-live="polite" hidden></div>
+        </div>
+
+        <!-- Tên đăng nhập -->
+        <div class="form-group">
+          <label for="userNameInput">Tên đăng nhập</label>
+          <input id="userNameInput" name="userName" type="text" autocomplete="username" placeholder="ten_dang_nhap" aria-describedby="userNameHelp" required>
+          <div id="userNameError" class="error-message" role="alert" aria-live="polite" hidden></div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="emailAddressInput">Email</label>
+          <input id="emailAddressInput" name="emailAddress" type="email" autocomplete="email" placeholder="email@example.com" aria-describedby="emailHelp" required>
+          <div id="emailAddressError" class="error-message" role="alert" aria-live="polite" hidden></div>
+        </div>
+
+        <!-- Mật khẩu -->
+        <div class="form-group">
+          <label for="passwordInput">Mật khẩu</label>
+          <div class="field-inline">
+            <input id="passwordInput" name="password" type="password" autocomplete="new-password" placeholder="Ít nhất 8 ký tự" required>
+            <button type="button" id="togglePasswordButton" class="password-toggle" aria-pressed="false" aria-label="Hiện mật khẩu">
+              Hiện
+            </button>
+          </div>
+          <div id="passwordError" class="error-message" role="alert" aria-live="polite" hidden></div>
+          <div id="passwordHelp" class="small-note">Mật khẩu nên có ít nhất 8 ký tự, gồm chữ và số.</div>
+        </div>
+
+        <!-- Xác nhận mật khẩu -->
+        <div class="form-group">
+          <label for="confirmPasswordInput">Xác nhận mật khẩu</label>
+          <input id="confirmPasswordInput" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Nhập lại mật khẩu" required>
+          <div id="confirmPasswordError" class="error-message" role="alert" aria-live="polite" hidden></div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+          <button id="submitButton" type="submit">Đăng ký</button>
+          <!-- type="button" để không submit form khi nhấn Huỷ -->
+          <button id="cancelButton" type="button" class="secondary">Huỷ</button>
+        </div>
+
+        <!-- Thông báo trạng thái chung -->
+        <div id="generalMessage" role="status" aria-live="polite" style="min-height:1.2em; margin-top:6px;"></div>
+
+        <div class="form-footer">
+          <span>Đã có tài khoản? <a id="loginLink" class="link" href="/login.html">Đăng nhập</a></span>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    // --- Các phần tử DOM ---
+    const registrationFormElement = document.getElementById('registrationForm');
+    const fullNameInputElement = document.getElementById('fullNameInput');
+    const userNameInputElement = document.getElementById('userNameInput');
+    const emailAddressInputElement = document.getElementById('emailAddressInput');
+    const passwordInputElement = document.getElementById('passwordInput');
+    const confirmPasswordInputElement = document.getElementById('confirmPasswordInput');
+
+    const fullNameErrorElement = document.getElementById('fullNameError');
+    const userNameErrorElement = document.getElementById('userNameError');
+    const emailAddressErrorElement = document.getElementById('emailAddressError');
+    const passwordErrorElement = document.getElementById('passwordError');
+    const confirmPasswordErrorElement = document.getElementById('confirmPasswordError');
+
+    const submitButtonElement = document.getElementById('submitButton');
+    const cancelButtonElement = document.getElementById('cancelButton');
+    const togglePasswordButtonElement = document.getElementById('togglePasswordButton');
+    const loginLinkElement = document.getElementById('loginLink');
+
+    const generalMessageElement = document.getElementById('generalMessage');
+
+    // --- Helpers ---
+    function isEmailValid(email) {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailPattern.test(email);
+    }
+
+    function clearFieldErrors() {
+      fullNameErrorElement.hidden = true;
+      userNameErrorElement.hidden = true;
+      emailAddressErrorElement.hidden = true;
+      passwordErrorElement.hidden = true;
+      confirmPasswordErrorElement.hidden = true;
+    }
+
+    function showGeneralMessage(text, type) {
+      // type = 'error' | 'success' | undefined
+      generalMessageElement.textContent = text || '';
+      generalMessageElement.className = type === 'error' ? 'error-message' : (type === 'success' ? 'success-message' : '');
+    }
+
+    // --- Validation ---
+    function validateFormInputs() {
+      let isFormValid = true;
+      clearFieldErrors();
+      showGeneralMessage('', undefined);
+
+      const fullNameValue = fullNameInputElement.value.trim();
+      const userNameValue = userNameInputElement.value.trim();
+      const emailValue = emailAddressInputElement.value.trim();
+      const passwordValue = passwordInputElement.value;
+      const confirmPasswordValue = confirmPasswordInputElement.value;
+
+      if (!fullNameValue) {
+        fullNameErrorElement.textContent = 'Vui lòng nhập họ và tên.';
+        fullNameErrorElement.hidden = false;
+        isFormValid = false;
+      } else if (fullNameValue.length < 2) {
+        fullNameErrorElement.textContent = 'Họ và tên phải có ít nhất 2 ký tự.';
+        fullNameErrorElement.hidden = false;
+        isFormValid = false;
+      }
+
+      if (!userNameValue) {
+        userNameErrorElement.textContent = 'Vui lòng nhập tên đăng nhập.';
+        userNameErrorElement.hidden = false;
+        isFormValid = false;
+      } else if (!/^[a-zA-Z0-9._-]{3,30}$/.test(userNameValue)) {
+        userNameErrorElement.textContent = 'Tên đăng nhập chỉ được chứa chữ, số, . _ - và 3–30 ký tự.';
+        userNameErrorElement.hidden = false;
+        isFormValid = false;
+      }
+
+      if (!emailValue) {
+        emailAddressErrorElement.textContent = 'Vui lòng nhập địa chỉ email.';
+        emailAddressErrorElement.hidden = false;
+        isFormValid = false;
+      } else if (!isEmailValid(emailValue)) {
+        emailAddressErrorElement.textContent = 'Email không hợp lệ.';
+        emailAddressErrorElement.hidden = false;
+        isFormValid = false;
+      }
+
+      if (!passwordValue) {
+        passwordErrorElement.textContent = 'Vui lòng nhập mật khẩu.';
+        passwordErrorElement.hidden = false;
+        isFormValid = false;
+      } else if (passwordValue.length < 8) {
+        passwordErrorElement.textContent = 'Mật khẩu phải có ít nhất 8 ký tự.';
+        passwordErrorElement.hidden = false;
+        isFormValid = false;
+      } else if (!/[0-9]/.test(passwordValue) || !/[A-Za-z]/.test(passwordValue)) {
+        passwordErrorElement.textContent = 'Mật khẩu nên gồm cả chữ và số.';
+        passwordErrorElement.hidden = false;
+        isFormValid = false;
+      }
+
+      if (confirmPasswordInputElement.value !== passwordValue) {
+        confirmPasswordErrorElement.textContent = 'Mật khẩu xác nhận không khớp.';
+        confirmPasswordErrorElement.hidden = false;
+        isFormValid = false;
+      }
+
+      return isFormValid;
+    }
+
+    // --- Submit handling ---
+    function enableSubmitButton() {
+      submitButtonElement.disabled = false;
+      submitButtonElement.textContent = 'Đăng ký';
+    }
+
+    function disableSubmitButtonInProgress() {
+      submitButtonElement.disabled = true;
+      submitButtonElement.textContent = 'Đang gửi...';
+    }
+
+    async function submitRegistrationForm(event) {
+      event.preventDefault();
+
+      // validate trước khi gửi
+      const isFormValid = validateFormInputs();
+      if (!isFormValid) {
+        showGeneralMessage('Vui lòng sửa các lỗi bên trên trước khi gửi.', 'error');
+        return;
+      }
+
+      const payload = {
+        name: fullNameInputElement.value.trim(),
+        username: userNameInputElement.value.trim(),
+        email: emailAddressInputElement.value.trim(),
+        password: passwordInputElement.value
+      };
+
+      disableSubmitButtonInProgress();
+      showGeneralMessage('', undefined);
+
+      try {
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        // parse JSON nếu server trả về JSON, không crash nếu body trống
+        const responseBody = await response.json().catch(() => null);
+
+        if (response.ok) {
+          if (responseBody && responseBody.token) {
+            localStorage.setItem('token', responseBody.token);
+          }
+          showGeneralMessage((responseBody && responseBody.message) ? responseBody.message : 'Đăng ký thành công.', 'success');
+
+          // điều hướng sau 600ms để người dùng thấy thông báo
+          setTimeout(() => {
+            window.location.href = '/app.html';
+          }, 600);
+        } else {
+          let messageFromServer = 'Đã xảy ra lỗi khi đăng ký.';
+          if (responseBody && responseBody.message) {
+            messageFromServer = responseBody.message;
+          } else if (response.status === 409) {
+            messageFromServer = 'Tên đăng nhập hoặc email đã được sử dụng.';
+          } else if (response.status === 422) {
+            messageFromServer = 'Dữ liệu gửi lên không hợp lệ.';
+          }
+          showGeneralMessage(messageFromServer, 'error');
+
+          // hiển thị lỗi từng field nếu server gửi về
+          if (responseBody && responseBody.errors && typeof responseBody.errors === 'object') {
+            Object.keys(responseBody.errors).forEach(function(fieldName) {
+              const message = responseBody.errors[fieldName];
+              if (!message) return;
+              if (fieldName === 'name') {
+                fullNameErrorElement.textContent = message; fullNameErrorElement.hidden = false;
+              } else if (fieldName === 'username') {
+                userNameErrorElement.textContent = message; userNameErrorElement.hidden = false;
+              } else if (fieldName === 'email') {
+                emailAddressErrorElement.textContent = message; emailAddressErrorElement.hidden = false;
+              } else if (fieldName === 'password') {
+                passwordErrorElement.textContent = message; passwordErrorElement.hidden = false;
+              }
+            });
+          }
+        }
+      } catch (networkError) {
+        console.error('Lỗi khi gọi API đăng ký:', networkError);
+        showGeneralMessage('Không thể kết nối tới server. Vui lòng kiểm tra mạng hoặc server.', 'error');
+      } finally {
+        enableSubmitButton();
+      }
+    }
+
+    // --- Toggle password visibility ---
+    function togglePasswordVisibility() {
+      const currentlyPassword = passwordInputElement.type === 'password';
+      if (currentlyPassword) {
+        passwordInputElement.type = 'text';
+        confirmPasswordInputElement.type = 'text';
+        togglePasswordButtonElement.textContent = 'Ẩn';
+        togglePasswordButtonElement.setAttribute('aria-pressed', 'true');
+        togglePasswordButtonElement.setAttribute('aria-label', 'Ẩn mật khẩu');
+      } else {
+        passwordInputElement.type = 'password';
+        confirmPasswordInputElement.type = 'password';
+        togglePasswordButtonElement.textContent = 'Hiện';
+        togglePasswordButtonElement.setAttribute('aria-pressed', 'false');
+        togglePasswordButtonElement.setAttribute('aria-label', 'Hiện mật khẩu');
+      }
+    }
+
+    // --- Cancel (Huỷ) action: reset tức thì, không submit, 1 lần click -->
+    function cancelRegistration(event) {
+      // Nếu sự kiện được truyền (từ click handler), ngăn hành vi mặc định & propagation
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      registrationFormElement.reset();
+      clearFieldErrors();
+      showGeneralMessage('', undefined);
+      enableSubmitButton();
+      // trả aria state nếu cần
+      togglePasswordButtonElement.textContent = 'Hiện';
+      togglePasswordButtonElement.setAttribute('aria-pressed', 'false');
+      passwordInputElement.type = 'password';
+      confirmPasswordInputElement.type = 'password';
+    }
+
+    // --- Khi nhấn link Đăng nhập: điều hướng ngay (1 click) ---
+    function navigateToLogin(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      // điều hướng ngay
+      window.location.href = loginLinkElement.getAttribute('href') || '/login.html';
+    }
+
+    // --- UX: validate on blur để hiển thị lỗi, nhưng không ngăn hành động cancel/link ---
+    function attachQuickValidationOnBlur() {
+      [fullNameInputElement, userNameInputElement, emailAddressInputElement, passwordInputElement, confirmPasswordInputElement]
+        .forEach(function(inputElement) {
+          inputElement.addEventListener('blur', function() {
+            validateFormInputs();
+          });
+        });
+    }
+
+    // --- Gắn sự kiện chính ---
+    registrationFormElement.addEventListener('submit', submitRegistrationForm);
+
+    // Cancel: đảm bảo chỉ cần 1 lần nhấn
+    cancelButtonElement.addEventListener('click', cancelRegistration);
+
+    // Link đăng nhập: ngăn mặc định và điều hướng ngay (1 lần nhấn)
+    loginLinkElement.addEventListener('click', navigateToLogin);
+
+    togglePasswordButtonElement.addEventListener('click', function(event) {
+      // ngăn propagation để tránh bất kỳ hành vi khác
+      event.preventDefault();
+      event.stopPropagation();
+      togglePasswordVisibility();
+    });
+
+    // Gắn blur validation để hiển thị lỗi khi user rời field
+    attachQuickValidationOnBlur();
+
+    // Tùy chọn: focus vào trường họ tên khi mở trang
+    fullNameInputElement.focus();
+  </script>
+</body>
+</html>

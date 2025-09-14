@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lộ trình học tập AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .fixed-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: #007bff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        button {
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            border-radius: 9999px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .login-btn {
+            background: white;
+            color: #333;
+            position: fixed;
+            top: 20px;
+            right: 175px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+        .login-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .register-btn {
+            background: #28a745;
+            color: white;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+        .register-btn:hover {
+            background: #218838;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        .toApp-btn {
+            background: #000;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+        .toApp-btn:hover {
+            background: #333;
+        }
+
+        .userInfo {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mainContent {
+            font-size: 60px;
+            font-weight: 700;
+            color: #333;
+            left: 500px;
+            top: 200px;
+            position: absolute;
+        }
+
+        #mainContent2 {
+            top: 275px;
+        }
+        .login-btn, .register-btn, .logout-btn, .toApp-btn {
+            z-index: 3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="fixed-bar">
+        <span style="color:white;font-size:25px;font-weight:600;position:absolute;top:13px;left:180px;">
+            Lộ Trình Học Tập AI
+        </span>
+        <span style="color:white;font-size:15px;font-weight:600;position:absolute;top:46px;left:180px;">
+            AI-Powered Learning Path
+        </span>
+        <div id="userArea" class="userInfo">
+        </div>
+    </div>
+
+    <button class="login-btn">
+        <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập
+    </button>
+
+    <button class="register-btn">
+        <i class="fa-solid fa-user-plus"></i> Đăng ký
+    </button>
+
+    <main>
+        <p class="mainContent">Trưởng thành từ</p>
+        <p class="mainContent" id="mainContent2">Những sở thích</p>
+    </main>
+
+    <script>
+        const loginBtn = document.querySelector(".login-btn");
+        const registerBtn = document.querySelector(".register-btn");
+        const userArea = document.getElementById("userArea");
+
+        function showAuthButtons() {
+            // hiện 2 nút ở góc phải
+            loginBtn.style.display = "inline-flex";
+            registerBtn.style.display = "inline-flex";
+            // XOÁ hẳn nội dung vùng userArea (greeting + nút logout/toApp)
+            userArea.innerHTML = '';
+        }
+
+        loginBtn.addEventListener("click", () => {
+            window.location.href = "login.html";
+        });
+
+        registerBtn.addEventListener("click", () => {
+            window.location.href = "register.html";
+        });
+
+        async function loadUser() {
+            const token = localStorage.getItem('token');
+
+            // mặc định hiển thị 2 nút (tránh trắng trang)
+            showAuthButtons();
+
+            if (!token) return;
+
+            try {
+                const res = await fetch('/api/me', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+
+                if (!res.ok) {
+                    // token hết hạn -> vẫn hiện 2 nút và KO hiện greeting
+                    showAuthButtons();
+                    return;
+                }
+
+                const data = await res.json();
+
+                // user đăng nhập -> ẩn 2 nút và hiển thị thông tin
+                loginBtn.style.display = "none";
+                registerBtn.style.display = "none";
+
+                userArea.innerHTML = `
+                    <span>Xin chào <strong style="color:white;">${data.user.name}</strong></span>
+                    <button id="logout" class="logout-btn">
+                        <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+                    </button>
+                    <button id="toApp" class="toApp-btn">
+                        <i class="fa-solid fa-arrow-right"></i> Trang học
+                    </button>
+                `;
+
+                // gắn listener sau khi element đã có trong DOM
+                document.getElementById('logout').addEventListener('click', () => {
+                    localStorage.removeItem('token');
+                    // chuyển UI về trạng thái chưa đăng nhập: hiện 2 nút và xoá greeting/nút cũ
+                    showAuthButtons();
+                });
+
+                document.getElementById('toApp').addEventListener('click', () => {
+                    window.location.href = "app.html";
+                });
+
+            } catch (err) {
+                console.error(err);
+                // lỗi mạng -> hiện 2 nút và xoá greeting
+                showAuthButtons();
+            }
+        }
+
+        // chạy khi DOM đã sẵn sàng (script ở cuối body thường ổn)
+        loadUser();
+    </script>
+
+</body>
+</html>

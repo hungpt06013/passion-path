@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Đăng nhập</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #f7faff;
+      --card: #ffffff;
+      --primary: #28a745;
+      --primary-strong: #1e7e34;
+      --muted: #6c757d;
+      --danger: #dc3545;
+      --radius: 10px;
+      --shadow: 0 6px 18px rgba(20,20,40,0.06);
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    }
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+        background: linear-gradient(180deg, #f7faff 0%, #eef6ff 100%);
+        color: #111;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+        min-height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 420px;
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 22px;
+        border: 1px solid rgba(10,20,40,0.03);
+    }
+
+    h1 {
+        margin: 0 0 6px 0;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    p.lead {
+        margin: 0 0 18px 0;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    form {
+        display: grid;
+        gap: 12px;
+    }
+
+    .form-group {
+        display: grid;
+        gap: 8px;
+    }
+
+    label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #111;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(10,20,40,0.08);
+        font-size: 14px;
+    }
+
+    input:focus {
+        outline: none;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+        border-color: rgba(0,0,0,0.12);
+    }
+
+    .inline {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .password-toggle {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        font-weight: 600;
+        color: var(--muted);
+    }
+
+    .actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-top: 6px;
+    }
+
+    button[type="submit"] {
+        flex: 1;
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 11px 14px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    button[type="submit"]:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    .secondary {
+        background: transparent;
+        border: 1px solid rgba(10,20,40,0.06);
+        padding: 10px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .error-text {
+        color: var(--danger);
+        font-size: 13px;
+        margin-top: 4px;
+    }
+
+    .info-text {
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 12px;
+        font-size: 13px;
+        color: var(--muted);
+    }
+
+    a.link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    @media (max-width: 480px) {
+        .card {
+            padding: 16px;
+        }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="card" aria-labelledby="login-heading">
+      <header>
+        <h1 id="login-heading">Đăng nhập</h1>
+        <p class="lead">Đăng nhập để tiếp tục lộ trình học tập AI.</p>
+      </header>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="loginUsernameInput">Tên đăng nhập hoặc email</label>
+          <input id="loginUsernameInput" name="username" type="text" autocomplete="username" placeholder="Tên đăng nhập hoặc email" required>
+          <div id="usernameError" class="error-text" role="alert" aria-live="polite" hidden></div>
+        </div>
+
+        <div class="form-group">
+          <label for="loginPasswordInput">Mật khẩu</label>
+          <div class="inline">
+            <input id="loginPasswordInput" name="password" type="password" autocomplete="current-password" placeholder="Mật khẩu" style="flex:1;" required>
+            <button type="button" id="toggleLoginPasswordButton" class="password-toggle" aria-pressed="false" aria-label="Hiện mật khẩu">Hiện</button>
+          </div>
+          <div id="passwordError" class="error-text" role="alert" aria-live="polite" hidden></div>
+        </div>
+
+        <div class="actions">
+          <button id="loginSubmitButton" type="submit">Đăng nhập</button>
+        </div>
+
+        <div id="loginGeneralMessage" class="info-text" role="status" aria-live="polite" style="min-height:1.2em;"></div>
+
+        <div class="footer">
+          <span>Bạn chưa có tài khoản? <a id="registerLink" class="link" href="/register.html">Đăng ký</a></span>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    // Các phần tử DOM
+    const loginFormElement = document.getElementById('loginForm');
+    const loginUsernameInputElement = document.getElementById('loginUsernameInput');
+    const loginPasswordInputElement = document.getElementById('loginPasswordInput');
+
+    const usernameErrorElement = document.getElementById('usernameError');
+    const passwordErrorElement = document.getElementById('passwordError');
+
+    const loginSubmitButtonElement = document.getElementById('loginSubmitButton');
+    const toggleLoginPasswordButtonElement = document.getElementById('toggleLoginPasswordButton');
+    const registerLinkElement = document.getElementById('registerLink');
+
+    const loginGeneralMessageElement = document.getElementById('loginGeneralMessage');
+
+    // Helpers
+    function clearLoginErrors() {
+      usernameErrorElement.hidden = true;
+      passwordErrorElement.hidden = true;
+      usernameErrorElement.textContent = '';
+      passwordErrorElement.textContent = '';
+      loginGeneralMessageElement.textContent = '';
+      loginGeneralMessageElement.className = 'info-text';
+    }
+
+    function setGeneralMessage(text, isError = false) {
+      loginGeneralMessageElement.textContent = text || '';
+      loginGeneralMessageElement.className = isError ? 'error-text' : 'info-text';
+    }
+
+    // Kiểm tra client đơn giản
+    function validateLoginInputs() {
+      let isValid = true;
+      clearLoginErrors();
+
+      const usernameValue = loginUsernameInputElement.value.trim();
+      const passwordValue = loginPasswordInputElement.value;
+
+      if (!usernameValue) {
+        usernameErrorElement.textContent = 'Vui lòng nhập tên đăng nhập hoặc email.';
+        usernameErrorElement.hidden = false;
+        isValid = false;
+      }
+
+      if (!passwordValue) {
+        passwordErrorElement.textContent = 'Vui lòng nhập mật khẩu.';
+        passwordErrorElement.hidden = false;
+        isValid = false;
+      }
+
+      return isValid;
+    }
+
+    // Disable/enable nút khi gửi
+    function disableLoginButtonWhileSending() {
+      loginSubmitButtonElement.disabled = true;
+      loginSubmitButtonElement.textContent = 'Đang đăng nhập...';
+    }
+    function enableLoginButton() {
+      loginSubmitButtonElement.disabled = false;
+      loginSubmitButtonElement.textContent = 'Đăng nhập';
+    }
+
+    // Thực hiện gửi login
+    async function submitLoginForm(event) {
+      event.preventDefault();
+
+      const isValid = validateLoginInputs();
+      if (!isValid) {
+        setGeneralMessage('Vui lòng sửa các lỗi trên trước khi đăng nhập.', true);
+        return;
+      }
+
+      const payload = {
+        username: loginUsernameInputElement.value.trim(),
+        password: loginPasswordInputElement.value
+      };
+
+      disableLoginButtonWhileSending();
+      setGeneralMessage('', false);
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const responseBody = await response.json().catch(() => null);
+
+        if (response.ok) {
+          if (responseBody && responseBody.token) {
+            localStorage.setItem('token', responseBody.token);
+          }
+          setGeneralMessage((responseBody && responseBody.message) ? responseBody.message : 'Đăng nhập thành công.', false);
+
+          // điều hướng ngay
+          setTimeout(() => {
+            window.location.href = '/app.html';
+          }, 400);
+        } else {
+          const serverMessage = (responseBody && responseBody.message) ? responseBody.message : 'Tên đăng nhập hoặc mật khẩu không chính xác.';
+          setGeneralMessage(serverMessage, true);
+
+          if (responseBody && responseBody.errors && typeof responseBody.errors === 'object') {
+            if (responseBody.errors.username) {
+              usernameErrorElement.textContent = responseBody.errors.username;
+              usernameErrorElement.hidden = false;
+            }
+            if (responseBody.errors.password) {
+              passwordErrorElement.textContent = responseBody.errors.password;
+              passwordErrorElement.hidden = false;
+            }
+          }
+
+          if (!loginUsernameInputElement.value.trim()) loginUsernameInputElement.focus();
+          else loginPasswordInputElement.focus();
+        }
+      } catch (networkError) {
+        console.error('Lỗi khi gọi API login:', networkError);
+        setGeneralMessage('Không thể kết nối tới server. Vui lòng kiểm tra mạng hoặc server.', true);
+      } finally {
+        enableLoginButton();
+      }
+    }
+
+    // Toggle show/hide password
+    function toggleLoginPasswordVisibility(event) {
+      if (event) { event.preventDefault(); event.stopPropagation(); }
+      const isPassword = loginPasswordInputElement.type === 'password';
+      if (isPassword) {
+        loginPasswordInputElement.type = 'text';
+        toggleLoginPasswordButtonElement.textContent = 'Ẩn';
+        toggleLoginPasswordButtonElement.setAttribute('aria-pressed', 'true');
+        toggleLoginPasswordButtonElement.setAttribute('aria-label', 'Ẩn mật khẩu');
+      } else {
+        loginPasswordInputElement.type = 'password';
+        toggleLoginPasswordButtonElement.textContent = 'Hiện';
+        toggleLoginPasswordButtonElement.setAttribute('aria-pressed', 'false');
+        toggleLoginPasswordButtonElement.setAttribute('aria-label', 'Hiện mật khẩu');
+      }
+    }
+
+    // Điều hướng tới trang đăng ký ngay khi click (1 lần)
+    function navigateToRegister(event) {
+      if (event) { event.preventDefault(); event.stopPropagation(); }
+      window.location.href = registerLinkElement.getAttribute('href') || '/register.html';
+    }
+
+    // Gắn sự kiện: submit form, toggle password, register link
+    loginFormElement.addEventListener('submit', submitLoginForm);
+    toggleLoginPasswordButtonElement.addEventListener('click', toggleLoginPasswordVisibility);
+    registerLinkElement.addEventListener('click', navigateToRegister);
+
+    // UX: validate on blur để hiển thị lỗi, KHÔNG ngăn hành vi navigation
+    [loginUsernameInputElement, loginPasswordInputElement].forEach(function(element) {
+      element.addEventListener('blur', function() {
+        validateLoginInputs();
+      });
+    });
+
+    // focus trường username khi mở trang
+    loginUsernameInputElement.focus();
+  </script>
+</body>
+</html>
